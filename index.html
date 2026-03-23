@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="和暦こよみ">
+<link rel="manifest" href="manifest.json">
+<title>和暦こよみ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;600&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1c1e;
+    --paper: #faf7f2;
+    --washi: #f0ebe0;
+    --accent: #8b4513;
+    --gold: #c8952a;
+    --mist: #9e9e9e;
+    --season-spring: #e8a0b4;
+    --season-summer: #4a9e6b;
+    --season-autumn: #d4692a;
+    --season-winter: #4a6fa5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,247,242,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(139,69,19,0.15);
+    padding: 16px 20px 12px;
+  }
+
+  .header-inner {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .app-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+  }
+
+  .app-title span {
+    color: var(--accent);
+  }
+
+  .today-btn {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    padding: 6px 14px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  /* NAV TABS */
+  nav {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 20px;
+    border-bottom: 1px solid rgba(139,69,19,0.1);
+    background: rgba(250,247,242,0.92);
+  }
+
+  nav button {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    color: var(--mist);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  nav button.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ===== TODAY SCREEN ===== */
+  .date-banner {
+    text-align: center;
+    padding: 28px 0 24px;
+    animation: fadeUp 0.5s ease;
+  }
+
+  .gregorian-date {
+    font-size: 12px;
+    color: var(--mist);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+
+  .big-day {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .big-day-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+  }
+
+  /* Season card */
+  .season-card {
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  .season-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .season-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+    opacity: 0.7;
+  }
+
+  .season-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .season-romaji {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    opacity: 0.6;
+  }
+
+  .season-dates {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .progress-bar-wrap {
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+    height: 4px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: currentColor;
+    transition: width 1s ease;
+  }
+
+  .progress-label {
+    font-size: 10px;
+    opacity: 0.6;
+    letter-spacing: 0.05em;
+  }
+
+  /* Sekki colors */
+  .card-spring { background: #fdf0f4; color: #6b2d4a; }
+  .card-summer { background: #eef7f1; color: #1a4d31; }
+  .card-autumn { background: #fdf3ec; color: #7a3010; }
+  .card-winter { background: #ecf0f8; color: #1a2f5a; }
+
+  /* Kou card */
+  .kou-card {
+    background: var(--washi);
+    border: 1px solid rgba(139,69,19,0.12);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s ease 0.2s both;
+  }
+
+  .kou-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .kou-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .kou-romaji {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+
+  .kou-desc {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #444;
+    border-left: 2px solid var(--accent);
+    padding-left: 14px;
+  }
+
+  /* Nature note */
+  .nature-note {
+    background: linear-gradient(135deg, #fdf8f0 0%, #f8f0e8 100%);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s ease 0.3s both;
+  }
+
+  .nature-note-title {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+
+  .nature-note-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  /* ===== CALENDAR SCREEN ===== */
+  .calendar-year-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .year-nav-btn {
+    background: none;
+    border: 1px solid rgba(139,69,19,0.25);
+    color: var(--accent);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .year-display {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+  }
+
+  .calendar-list { }
+
+  .sekki-row {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 2px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+
+  .sekki-row:hover { transform: translateX(3px); }
+
+  .sekki-row.today-row {
+    box-shadow: 0 2px 12px rgba(139,69,19,0.2);
+  }
+
+  .sekki-stripe {
+    width: 4px;
+    flex-shrink: 0;
+  }
+
+  .sekki-content {
+    flex: 1;
+    padding: 14px 16px;
+    background: var(--washi);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sekki-row.today-row .sekki-content {
+    background: #fff8f0;
+  }
+
+  .sekki-left {}
+
+  .sekki-date-label {
+    font-size: 11px;
+    color: var(--mist);
+    margin-bottom: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .sekki-cal-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+  }
+
+  .sekki-right {
+    text-align: right;
+  }
+
+  .sekki-season-badge {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-spring { background: #fce8f0; color: #9e3a6a; }
+  .badge-summer { background: #e4f5eb; color: #1a6b40; }
+  .badge-autumn { background: #fdeee4; color: #8b3a10; }
+  .badge-winter { background: #e8edf8; color: #2a3f7a; }
+
+  .kou-mini-list {
+    display: none;
+    padding: 8px 16px 14px 20px;
+    background: #fffdf9;
+    border-top: 1px solid rgba(139,69,19,0.08);
+  }
+
+  .kou-mini-list.open { display: block; }
+
+  .kou-mini-item {
+    font-size: 12px;
+    color: #666;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  /* ===== DETAIL SCREEN ===== */
+  .detail-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 13px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .detail-hero {
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .detail-season-char {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  .detail-sekki-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .detail-sekki-romaji {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  .detail-sekki-dates {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  .detail-section {
+    background: var(--washi);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+
+  .detail-section-title {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  .detail-desc {
+    font-size: 14px;
+    line-height: 1.9;
+    color: #444;
+  }
+
+  .kou-detail-item {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .kou-detail-item:last-child { border-bottom: none; }
+
+  .kou-detail-number {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .kou-detail-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .kou-detail-romaji {
+    font-size: 11px;
+    color: var(--mist);
+    margin-bottom: 8px;
+  }
+
+  .kou-detail-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Notification banner */
+  .notif-banner {
+    background: #f0f8ff;
+    border: 1px solid #b0d4f0;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.5s ease 0.4s both;
+  }
+
+  .notif-icon { font-size: 20px; }
+
+  .notif-text { font-size: 12px; color: #2a6096; line-height: 1.5; flex: 1; }
+
+  .notif-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+    background: #2a6096;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .stripe-spring { background: var(--season-spring); }
+  .stripe-summer { background: var(--season-summer); }
+  .stripe-autumn { background: var(--season-autumn); }
+  .stripe-winter { background: var(--season-winter); }
+
+  .today-marker {
+    font-size: 9px;
+    background: var(--accent);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    margin-left: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="app-title">和暦<span>こよみ</span></div>
+    <button class="today-btn" onclick="goToday()">今日</button>
+  </div>
+  <nav>
+    <button class="active" onclick="showScreen('today', this)">今日</button>
+    <button onclick="showScreen('calendar', this)">一覧</button>
+    <button onclick="showScreen('detail-list', this)">節気詳細</button>
+  </nav>
+</header>
+
+<main>
+  <!-- TODAY SCREEN -->
+  <div class="screen active" id="screen-today">
+    <div class="date-banner">
+      <div class="gregorian-date" id="gregorian-date"></div>
+      <div class="big-day" id="today-day"></div>
+      <div class="big-day-label" id="today-weekday"></div>
+    </div>
+
+    <div class="notif-banner" id="notif-banner" style="display:none">
+      <div class="notif-icon">🔔</div>
+      <div class="notif-text">節気の変わり目をお知らせします</div>
+      <button class="notif-btn" onclick="requestNotif()">許可する</button>
+    </div>
+
+    <div class="season-card" id="today-sekki-card">
+      <div class="season-label">二十四節気</div>
+      <div class="season-name" id="today-sekki-name"></div>
+      <div class="season-romaji" id="today-sekki-romaji"></div>
+      <div class="season-dates" id="today-sekki-dates"></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="sekki-progress" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="sekki-progress-label"></div>
+    </div>
+
+    <div class="kou-card">
+      <div class="kou-label">七十二候</div>
+      <div class="kou-name" id="today-kou-name"></div>
+      <div class="kou-romaji" id="today-kou-romaji"></div>
+      <div class="kou-desc" id="today-kou-desc"></div>
+    </div>
+
+    <div class="nature-note">
+      <div class="nature-note-title">✦ 自然のたより</div>
+      <div class="nature-note-text" id="today-nature"></div>
+    </div>
+  </div>
+
+  <!-- CALENDAR SCREEN -->
+  <div class="screen" id="screen-calendar">
+    <div class="calendar-year-nav">
+      <button class="year-nav-btn" onclick="changeYear(-1)">‹</button>
+      <div class="year-display" id="cal-year-display"></div>
+      <button class="year-nav-btn" onclick="changeYear(1)">›</button>
+    </div>
+    <div class="calendar-list" id="calendar-list"></div>
+  </div>
+
+  <!-- DETAIL LIST SCREEN -->
+  <div class="screen" id="screen-detail-list">
+    <div id="detail-list-content"></div>
+  </div>
+
+  <!-- DETAIL SCREEN -->
+  <div class="screen" id="screen-detail">
+    <button class="detail-back" onclick="backFromDetail()">← 戻る</button>
+    <div id="detail-content"></div>
+  </div>
+</main>
+
+<script>
+// ===== DATA =====
+const SEKKI = [
+  { id: 0, name: "小寒", romaji: "Shōkan", en: "Minor Cold", month: 1, day: 6, season: "winter",
+    desc: "寒さが本格的になり始める頃。「寒の入り」とも言い、この日から節分（立春の前日）までの期間を「寒中」と呼びます。",
+    nature: "野鳥が群れをなして飛び、山々は雪に覆われ始めます。水面は薄氷を張り、草木は静かに春を待ちます。" },
+  { id: 1, name: "大寒", romaji: "Daikan", en: "Major Cold", month: 1, day: 20, season: "winter",
+    desc: "一年で最も寒さが厳しい時期。寒稽古や寒中水泳など、寒さを活かした行事が行われます。この頃の水は「寒水（かんすい）」と呼ばれ、雑菌が少なく保存に向くとされました。",
+    nature: "凍てつく朝の空気の中、梅の蕾がほんのりと膨らみ始めます。冬の底から、春の気配がそっと動き出す時です。" },
+  { id: 2, name: "立春", romaji: "Risshun", en: "Start of Spring", month: 2, day: 4, season: "spring",
+    desc: "暦の上での春の始まり。「八十八夜」「二百十日」などの起算日となります。節分の翌日にあたり、この日から立夏の前日までが春とされます。",
+    nature: "梅が咲き始め、野の草が芽吹きます。春風が柔らかく頬を撫で、日差しも少しずつ力を取り戻してきます。" },
+  { id: 3, name: "雨水", romaji: "Usui", en: "Rain Water", month: 2, day: 19, season: "spring",
+    desc: "雪が雨に変わり、氷が溶けて水になる頃。農耕の準備を始める目安とされてきました。土の中で眠っていた生き物たちが動き始めます。",
+    nature: "春雨がしっとりと大地を潤し、タンポポや土筆が顔を出し始めます。川の水かさが増し、生命の営みが静かに始まります。" },
+  { id: 4, name: "啓蟄", romaji: "Keichitsu", en: "Awakening of Insects", month: 3, day: 6, season: "spring",
+    desc: "地中で冬ごもりしていた虫たちが、春の暖かさに目覚めて地上に出てくる頃。「啓」は開く、「蟄」は土の中で冬眠する虫を意味します。",
+    nature: "モンシロチョウが舞い、ミミズが土を耕し始めます。カエルの声が田んぼから聞こえ、生命の鼓動が大地に満ちていきます。" },
+  { id: 5, name: "春分", romaji: "Shunbun", en: "Vernal Equinox", month: 3, day: 21, season: "spring",
+    desc: "昼と夜の長さが同じになる日。この日を中心とした前後3日間を「彼岸」と呼び、お墓参りをする風習があります。太陽が真東から昇り、真西に沈みます。",
+    nature: "桜の蕾が膨らみ、菜の花が黄色く輝きます。ツバメが南から帰ってきて、春の音が野山に広がります。" },
+  { id: 6, name: "清明", romaji: "Seimei", en: "Clear and Bright", month: 4, day: 5, season: "spring",
+    desc: "万物が清々しく明るく輝き、生命が躍動する頃。「清明節」として東アジア各地で祖先を祀る行事が行われます。",
+    nature: "山野は緑に包まれ、桜が満開を迎えます。空は澄み渡り、花の香りが風に乗って運ばれてきます。" },
+  { id: 7, name: "穀雨", romaji: "Kokuu", en: "Grain Rains", month: 4, day: 20, season: "spring",
+    desc: "田畑を潤す春雨が降る頃。穀物の成長を促す恵みの雨が降り、農作業が本格化します。「穀雨を過ぎると霜降りなし」という言葉も。",
+    nature: "新緑がいっそう輝き、藤の花が紫の房を垂らします。雨粒が若葉に宿り、大地は豊かな実りの準備を始めます。" },
+  { id: 8, name: "立夏", romaji: "Rikka", en: "Start of Summer", month: 5, day: 6, season: "summer",
+    desc: "暦の上での夏の始まり。野山は新緑に覆われ、風薫る爽やかな季節です。この日から立秋の前日までが夏とされます。",
+    nature: "青葉が茂り、カッコウの声が山から届きます。川の水が透き通り、子供たちが元気よく野を駆け回ります。" },
+  { id: 9, name: "小満", romaji: "Shōman", en: "Grain Buds", month: 5, day: 21, season: "summer",
+    desc: "万物が次第に成長し、天地に満ち始める頃。「小満」の名は、農作物がある程度成長したことへの小さな満足感を表すとも言われます。",
+    nature: "麦が実り始め、紅花が咲き、蚕は桑を食み始めます。田植えの準備が整い、農村は活気に満ちます。" },
+  { id: 10, name: "芒種", romaji: "Bōshu", en: "Grain in Ear", month: 6, day: 6, season: "summer",
+    desc: "稲や麦などイネ科の植物の種まきの時期。「芒（のぎ）」とは稲・麦などの穂先にある針状の突起のことです。梅雨が始まる頃でもあります。",
+    nature: "ホタルが光り始め、梅が黄色く熟します。雨に濡れた紫陽花が色鮮やかに咲き、カエルの合唱が響き渡ります。" },
+  { id: 11, name: "夏至", romaji: "Geshi", en: "Summer Solstice", month: 6, day: 21, season: "summer",
+    desc: "一年で最も昼が長く、夜が短い日。この日を境に日照時間は少しずつ短くなっていきます。沖縄では梅雨明けの時期でもあります。",
+    nature: "太陽が最も高く輝き、向日葵が空を見上げます。夜は短く、蛍の光が闇の中に浮かび上がります。" },
+  { id: 12, name: "小暑", romaji: "Shōsho", en: "Minor Heat", month: 7, day: 7, season: "summer",
+    desc: "梅雨明けが近づき、本格的な暑さが始まる頃。七夕の節句もこの時期にあたります。「暑中見舞い」を送る習慣はこの頃から始まります。",
+    nature: "蝉が鳴き始め、向日葵が高く伸びます。入道雲が青空に聳え、子供たちは海や川へと駆け出します。" },
+  { id: 13, name: "大暑", romaji: "Taisho", en: "Major Heat", month: 7, day: 23, season: "summer",
+    desc: "一年で最も暑さが厳しい時期。土用の丑の日もこの頃にあたり、ウナギを食べる風習があります。夕立や打ち水で涼を取る季節です。",
+    nature: "蝉時雨が降り注ぎ、夕暮れに風鈴の音が涼を呼びます。夕立の後の虹と、土の匂いが夏の盛りを告げます。" },
+  { id: 14, name: "立秋", romaji: "Risshū", en: "Start of Autumn", month: 8, day: 7, season: "autumn",
+    desc: "暦の上での秋の始まり。残暑見舞いはこの日以降に送ります。夕方の風に秋の気配が感じられるようになります。",
+    nature: "夕空に秋の雲が広がり、コオロギの声が聞こえ始めます。朝晩の風がわずかに涼しくなり、変化の季節が訪れます。" },
+  { id: 15, name: "処暑", romaji: "Shosho", en: "End of Heat", month: 8, day: 23, season: "autumn",
+    desc: "厳しい暑さが和らぎ始める頃。「処」は「止まる」という意味で、暑さが落ち着くことを表します。台風シーズンの始まりでもあります。",
+    nature: "朝露が草葉に宿り、稲穂が金色に実り始めます。秋風が吹き渡り、空の青さが一段と深まります。" },
+  { id: 16, name: "白露", romaji: "Hakuro", en: "White Dew", month: 9, day: 8, season: "autumn",
+    desc: "草の葉に白い露が宿る頃。日中は残暑が残りますが、朝晩は涼しくなり、秋の深まりを感じます。",
+    nature: "萩の花が揺れ、露がダイヤモンドのように光ります。渡り鳥の群れが南を目指し始め、空が高く澄み渡ります。" },
+  { id: 17, name: "秋分", romaji: "Shūbun", en: "Autumnal Equinox", month: 9, day: 23, season: "autumn",
+    desc: "昼と夜の長さが同じになる日。春分と同様に「彼岸」の中日で、秋のお彼岸のお墓参りが行われます。この日を境に夜が長くなります。",
+    nature: "彼岸花が燃えるように咲き、稲刈りが始まります。月が大きく美しく、虫の声が夜長に響き渡ります。" },
+  { id: 18, name: "寒露", romaji: "Kanro", en: "Cold Dew", month: 10, day: 8, season: "autumn",
+    desc: "野の露が寒さで凍りそうになる頃。農作物の収穫が盛んになり、秋の深まりを実感する季節です。",
+    nature: "菊が香り、モミジが色づき始めます。渡り鳥が空を渡り、実りの秋が最盛期を迎えます。" },
+  { id: 19, name: "霜降", romaji: "Sōkō", en: "Frost's Descent", month: 10, day: 23, season: "autumn",
+    desc: "霜が降り始める頃。山では紅葉が最盛期を迎え、朝には霜が白く輝きます。冬の訪れを告げる節気です。",
+    nature: "山が紅と金に染まり、柿が枝もたわわに実ります。朝霜が庭を白く覆い、冬の予感が近づいてきます。" },
+  { id: 20, name: "立冬", romaji: "Rittō", en: "Start of Winter", month: 11, day: 7, season: "winter",
+    desc: "暦の上での冬の始まり。木枯らしが吹き始め、冬の気配が濃くなります。この日から立春の前日までが冬とされます。",
+    nature: "銀杏が黄金色に輝き、木枯らし一号が吹きます。山々に初雪が降り、冬支度の時節が来ました。" },
+  { id: 21, name: "小雪", romaji: "Shōsetsu", en: "Minor Snow", month: 11, day: 22, season: "winter",
+    desc: "山では雪が降り始める頃。「小雪」の名の通り、まだ積もるほどの雪ではありませんが、北国では本格的な雪の季節が始まります。",
+    nature: "紅葉が散り、山に初雪がかかります。みかんが黄色く実り、鍋料理の恋しい季節になります。" },
+  { id: 22, name: "大雪", romaji: "Taisetsu", en: "Major Snow", month: 12, day: 7, season: "winter",
+    desc: "雪が本格的に降り積もる頃。山は深い雪に覆われ、熊が冬眠に入ります。この頃から正月の準備が始まります。",
+    nature: "鶴が舞い降り、熊が眠りにつきます。炉辺の温かさがより恋しくなり、新年への準備が始まります。" },
+  { id: 23, name: "冬至", romaji: "Tōji", en: "Winter Solstice", month: 12, day: 22, season: "winter",
+    desc: "一年で最も夜が長く、昼が短い日。ゆず湯に入り、かぼちゃを食べる風習があります。この日を境に、少しずつ日が長くなります。",
+    nature: "柚子が金色に実り、静かな長い夜が訪れます。すべては底を打ち、ここから光は再び満ちていきます。" },
+];
+
+const KOU = [
+  // 小寒 (1/6)
+  [
+    { name: "芹乃栄", romaji: "Seri sunawachi sakau", desc: "春の七草のひとつ、芹が水辺で盛んに育つ頃。清冽な流れの中、緑の芹が勢いよく茂ります。" },
+    { name: "水泉動", romaji: "Shimizu atataka o fukumu", desc: "地中で凍っていた泉が動き始め、地下水が動き出す頃。まだ寒い大地の奥で、春の気配がほのかに芽生えます。" },
+    { name: "雉始雊", romaji: "Kiji hajimete naku", desc: "雄の雉が鳴き始める頃。冬の野に響く雉の声は、春を呼ぶ合図のようです。" }
+  ],
+  // 大寒 (1/20)
+  [
+    { name: "款冬華", romaji: "Fuki no hana saku", desc: "蕗の薹（ふきのとう）が花を咲かせる頃。雪の下からいち早く顔を出す蕗の薹に、春を感じます。" },
+    { name: "水沢腹堅", romaji: "Sawamizu kōri tsumeru", desc: "沢の水が厚く凍り、氷が最も厚くなる頃。自然界の冬の深さを感じる時節です。" },
+    { name: "鶏始乳", romaji: "Niwatori hajimete tоbu", desc: "鶏が卵を産み始める頃。春の訪れを感じた鶏が、命を育む営みを始めます。" }
+  ],
+  // 立春 (2/4)
+  [
+    { name: "東風解凍", romaji: "Harukaze kōri o toku", desc: "春の東風が吹いて、凍った川や湖の氷を溶かし始める頃。温かい風が、冬の終わりを告げます。" },
+    { name: "黄鴬睍睆", romaji: "Uguisu naku", desc: "鶯が山里で美しく鳴き始める頃。「ホーホケキョ」という声は、春の訪れを告げる使者のようです。" },
+    { name: "魚上氷", romaji: "Uo kōri o izuru", desc: "川の氷が割れて、魚が水面近くで泳ぎ始める頃。春の陽気に誘われ、水中の生き物も活動を始めます。" }
+  ],
+  // 雨水 (2/19)
+  [
+    { name: "土脉潤起", romaji: "Tsuchi no shō uruoi okoru", desc: "雨が降って大地が潤い始める頃。固く締まった冬の土が、春雨によって柔らかく目覚めます。" },
+    { name: "霞始靆", romaji: "Kasumi hajimete tanabiku", desc: "春霞がたなびき始める頃。山々が淡い霞に包まれ、幻想的な春の景色が広がります。" },
+    { name: "草木萌動", romaji: "Sōmoku meibuku", desc: "草木が芽吹き始める頃。冬の間静かに眠っていた木々の枝先が、緑の命を帯びてきます。" }
+  ],
+  // 啓蟄 (3/6)
+  [
+    { name: "蟄虫啓戸", romaji: "Sugomori no mushi to o hiraku", desc: "土の中で冬ごもりしていた虫たちが、穴を開けて地上に出てくる頃。大地が目覚め、小さな命が動き出します。" },
+    { name: "桃始笑", romaji: "Momo hajimete saku", desc: "桃の花が咲き始める頃。柔らかなピンクの花びらが、春の喜びを告げます。" },
+    { name: "菜虫化蝶", romaji: "Namushi chō to naru", desc: "青虫（菜虫）がさなぎから蝶へと羽化する頃。変容の神秘が、野原に펼쳐짐ます。" }
+  ],
+  // 春分 (3/21)
+  [
+    { name: "雀始巣", romaji: "Suzume hajimete sukū", desc: "雀が巣を作り始める頃。軒先や木の枝に小さな命の住処が丁寧に作られていきます。" },
+    { name: "桜始開", romaji: "Sakura hajimete saku", desc: "桜が咲き始める頃。日本人の心に深く刻まれた桜が、華やかに季節を彩ります。" },
+    { name: "雷乃発声", romaji: "Kaminari sunawachi koe o hassu", desc: "春の遠雷が鳴り始める頃。天から届く声は、大地に生命の恵みをもたらす雨の予告です。" }
+  ],
+  // 清明 (4/5)
+  [
+    { name: "玄鳥至", romaji: "Tsubame kitaru", desc: "燕が南方から渡ってくる頃。軒先に巣を作る燕は、春の訪れを告げる懐かしい使者です。" },
+    { name: "鴻雁北", romaji: "Kōgan kaeru", desc: "雁が北方へ帰っていく頃。V字形に並んで北へ向かう雁の群れが、春空に弧を描きます。" },
+    { name: "虹始見", romaji: "Niji hajimete arawaru", desc: "春雨の後に虹が見え始める頃。雨と光が作り出す橋が、空に美しいアーチを描きます。" }
+  ],
+  // 穀雨 (4/20)
+  [
+    { name: "葭始生", romaji: "Ashi hajimete shōzu", desc: "葦が水辺に芽吹き始める頃。河岸や湿地に緑の若葉が勢いよく伸び始めます。" },
+    { name: "霜止出苗", romaji: "Shimo yamite nae izuru", desc: "霜が降りなくなり、田に苗が育ち始める頃。農家にとっての大切な節目です。" },
+    { name: "牡丹華", romaji: "Botan hana saku", desc: "牡丹の花が咲く頃。豪華で優雅な牡丹の花は、「百花の王」と呼ばれます。" }
+  ],
+  // 立夏 (5/6)
+  [
+    { name: "蛙始鳴", romaji: "Kawazu hajimete naku", desc: "蛙が鳴き始める頃。田んぼや川辺から聞こえるカエルの声が、夏の始まりを告げます。" },
+    { name: "蚯蚓出", romaji: "Mimizu izuru", desc: "ミミズが地面に出てくる頃。土の中から現れたミミズが、大地を耕す小さな農夫として働きます。" },
+    { name: "竹笋生", romaji: "Takenoko shōzu", desc: "竹の子が生えてくる頃。地面を割って一気に成長するタケノコの生命力に驚かされます。" }
+  ],
+  // 小満 (5/21)
+  [
+    { name: "蚕起食桑", romaji: "Kaiko okite kuwa o hamu", desc: "蚕が盛んに桑の葉を食べ始める頃。白い繭を作り出す蚕の営みが、人々の暮らしと深く結びついてきました。" },
+    { name: "紅花栄", romaji: "Benibana sakau", desc: "紅花が盛んに咲く頃。鮮やかな橙色の花が野を彩り、染料や化粧品の材料となりました。" },
+    { name: "麦秋至", romaji: "Mugi no toki itaru", desc: "麦が実り、収穫の時を迎える頃。黄金色に輝く麦畑が広がり、初夏の風に揺れます。" }
+  ],
+  // 芒種 (6/6)
+  [
+    { name: "螳螂生", romaji: "Kamakiri shōzu", desc: "カマキリが孵化する頃。細長い体で威風堂々と佇むカマキリは、夏の野原の支配者です。" },
+    { name: "腐草為蛍", romaji: "Kusaretaru kusa hotaru to naru", desc: "腐った草が蛍になるという古い言い伝えから、蛍が飛び始める頃。夜の川辺に光の舞が広がります。" },
+    { name: "梅子黄", romaji: "Ume no mi kibamu", desc: "梅の実が黄色く熟してくる頃。甘酸っぱい香りが漂い、梅酒や梅干しを作る季節が来ます。" }
+  ],
+  // 夏至 (6/21)
+  [
+    { name: "乃東枯", romaji: "Natsukarekusa kareru", desc: "夏枯草（ウツボグサ）が枯れる頃。冬に芽吹いてこの季節に枯れる草の、逆説的な命の巡りに自然の深みを感じます。" },
+    { name: "菖蒲華", romaji: "Ayame hana saku", desc: "花菖蒲が咲く頃。紫や白の優雅な花が水辺を彩り、夏の盛りを告げます。" },
+    { name: "半夏生", romaji: "Hange shōzu", desc: "半夏（烏柄杓）が生える頃。この日は農業の節目とされ、田植えを終える目安とされてきました。" }
+  ],
+  // 小暑 (7/7)
+  [
+    { name: "温風至", romaji: "Atsukaze itaru", desc: "蒸し暑い風が吹いてくる頃。七夕の夜、天の川を越えて吹く風に、織姫と彦星の思いが乗ります。" },
+    { name: "蓮始開", romaji: "Hasu hajimete hiraku", desc: "蓮の花が咲き始める頃。清らかな水の上に咲く蓮の花は、仏教では悟りと清浄の象徴です。" },
+    { name: "鷹乃学習", romaji: "Taka sunawachi waza o narau", desc: "鷹の雛が飛ぶ練習をする頃。親鷹に見守られながら、雛鷹が大空への翼を試します。" }
+  ],
+  // 大暑 (7/23)
+  [
+    { name: "桐始結花", romaji: "Kiri hajimete hana o musubu", desc: "桐の木が花の蕾を結び始める頃。秋に向けて密かに準備する桐の木に、自然の長い時間を感じます。" },
+    { name: "土潤溽暑", romaji: "Tsuchi uruoite mushi atsushi", desc: "土が蒸れるように暑くなる頃。地熱と湿気が合わさった蒸し暑さは、日本の夏の真髄です。" },
+    { name: "大雨時行", romaji: "Taiu tokidoki ふる", desc: "夕立が激しく降る頃。積乱雲が発達して、突然の豪雨が大地を洗い流します。" }
+  ],
+  // 立秋 (8/7)
+  [
+    { name: "涼風至", romaji: "Suzukaze itaru", desc: "涼しい風が吹き始める頃。まだ残暑は厳しくとも、朝夕の風にかすかな秋の気配が感じられます。" },
+    { name: "寒蝉鳴", romaji: "Higurashi naku", desc: "ヒグラシが鳴き始める頃。「カナカナカナ」という哀愁ある声は、夏の終わりを告げます。" },
+    { name: "蒙霧升降", romaji: "Fukaki kiri matou", desc: "深い霧が立ち込める頃。早朝の野に白い霧がたなびき、秋の趣を深めます。" }
+  ],
+  // 処暑 (8/23)
+  [
+    { name: "綿柎開", romaji: "Wata no hana shibe hiraku", desc: "綿の花が咲き、実が開いて白い綿毛が顔を出す頃。柔らかな白綿が秋の始まりを知らせます。" },
+    { name: "天地始粛", romaji: "Tenchi hajimete samushi", desc: "ようやく暑さが収まり、天地が清らかになってくる頃。万物の動きが静まり、秋の厳かな気配が満ちます。" },
+    { name: "禾乃登", romaji: "Kokumono sunawachi minoru", desc: "稲などの穀物が実り始める頃。黄金色に染まる田んぼは、農家の一年の努力の結晶です。" }
+  ],
+  // 白露 (9/8)
+  [
+    { name: "草露白", romaji: "Kusa no tsuyu shiroshi", desc: "草の葉に白い露が宿る頃。朝の光を受けて輝く水滴は、自然が作り出す小さな宝石です。" },
+    { name: "鶺鴒鳴", romaji: "Sekirei naku", desc: "セキレイが鳴き始める頃。水辺でヒタキヒタキと尾を振りながら歩くセキレイに、秋の愛らしさを感じます。" },
+    { name: "玄鳥去", romaji: "Tsubame さる", desc: "燕が南方へ帰っていく頃。春に来た燕が旅立つ姿は、秋の訪れを告げる別れの時です。" }
+  ],
+  // 秋分 (9/23)
+  [
+    { name: "雷乃収声", romaji: "Kaminari sunawachi koe o osamu", desc: "夏の間鳴り響いていた雷が静かになる頃。空が澄み渡り、秋の静けさが戻ってきます。" },
+    { name: "蟄虫坏戸", romaji: "Mushi kakurete to oふさぐ", desc: "虫たちが冬ごもりの準備を始める頃。啓蟄に開いた土の扉が、再び閉じられていきます。" },
+    { name: "水始涸", romaji: "Mizu hajimete karu", desc: "田の水が干上がり始める頃。稲刈りを終えた田んぼが、静かに休眠の準備に入ります。" }
+  ],
+  // 寒露 (10/8)
+  [
+    { name: "鴻雁来", romaji: "Kōgan kitaru", desc: "雁が北から渡ってくる頃。V字形に整列して飛ぶ雁の群れが、秋の空を横切ります。" },
+    { name: "菊花開", romaji: "Kiku no hana hiraku", desc: "菊の花が咲く頃。百花を超えて最後まで咲く菊は、古来より長寿と気高さの象徴とされてきました。" },
+    { name: "蟋蟀在戸", romaji: "Kirigirisu to ni あり", desc: "コオロギが戸口で鳴く頃。夜長を彩るコオロギの声は、秋の音の中でも最も趣深いものの一つです。" }
+  ],
+  // 霜降 (10/23)
+  [
+    { name: "霜始降", romaji: "Shimo hajimete furu", desc: "霜が降り始める頃。白く輝く霜は、冬の訪れを告げる自然からのメッセージです。" },
+    { name: "霎時施", romaji: "Kosame tokidoki furu", desc: "小雨がときおり降る頃。秋雨がしとしとと降り、野山の色彩をより深く濃くします。" },
+    { name: "楓蔦黄", romaji: "Momiji tsuta kibamu", desc: "もみじや蔦が黄葉する頃。山々が赤と金に染まり、一年で最も美しい色彩の季節が来ます。" }
+  ],
+  // 立冬 (11/7)
+  [
+    { name: "山茶始開", romaji: "Tsubaki hajimete hiraku", desc: "山茶花（さざんか）が咲き始める頃。冬の入り口に咲く花の可憐さに、深みを感じます。" },
+    { name: "地始凍", romaji: "Chi hajimete kōru", desc: "大地が凍り始める頃。朝の土が固く締まり、冬の大地の静けさが広がります。" },
+    { name: "金盞香", romaji: "Suisen no hana saku", desc: "水仙の花が咲き始める頃。白く清楚な水仙の香りが、冬の澄んだ空気に漂います。" }
+  ],
+  // 小雪 (11/22)
+  [
+    { name: "虹蔵不見", romaji: "Niji kakurete miezu", desc: "虹が見えなくなる頃。雲が厚くなり、太陽の光が弱まって、虹の季節が終わります。" },
+    { name: "朔風払葉", romaji: "Kitakaze konoha o harau", desc: "北風が木の葉を払い落とす頃。冷たい風が残った葉を散らし、木々は冬の姿になっていきます。" },
+    { name: "橘始黄", romaji: "Tachibana hajimete kibamu", desc: "橘の実が黄色くなり始める頃。冬の緑の葉に映える黄色い実が、寒い季節の彩りとなります。" }
+  ],
+  // 大雪 (12/7)
+  [
+    { name: "閉塞成冬", romaji: "Sora samuku fuyu to naru", desc: "空が閉ざされ、本格的な冬になる頃。天と地の間が雪雲で塞がれ、静寂の冬が訪れます。" },
+    { name: "熊蟄穴", romaji: "Kuma ana ni こもる", desc: "熊が冬眠のために穴にこもる頃。冬の山は静かに眠りにつき、春までの長い休息が始まります。" },
+    { name: "鮭魚群", romaji: "Sake no uo むらがる", desc: "鮭が川を遡上して群れる頃。故郷の川を目指して力強く泳ぐ鮭の姿に、命の営みを感じます。" }
+  ],
+  // 冬至 (12/22)
+  [
+    { name: "乃東生", romaji: "Natsukarekusa shōzu", desc: "夏枯草（ウツボグサ）が芽を出す頃。他の草木が枯れる冬に芽吹くこの草に、生命力の逞しさを感じます。" },
+    { name: "麋角解", romaji: "Saoshika no tsuno otsuru", desc: "大鹿の角が落ちる頃。重い角を落とした鹿が、軽やかに雪の野を駆けます。" },
+    { name: "雪下出麦", romaji: "Yuki watarite mugi nobiru", desc: "雪の下で麦が芽を出す頃。極寒の大地の下で、春を目指して静かに成長する命があります。" }
+  ],
+];
+
+// ===== LOGIC =====
+let calYear = new Date().getFullYear();
+let currentDetailId = null;
+let fromScreen = 'calendar';
+
+function getSeason(sekkiId) {
+  return SEKKI[sekkiId].season;
+}
+
+function getSekkiDate(year, sekkiId) {
+  const s = SEKKI[sekkiId];
+  return new Date(year, s.month - 1, s.day);
+}
+
+function getCurrentSekki(date) {
+  const year = date.getFullYear();
+  
+  // Find which sekki we're in
+  for (let i = 0; i < SEKKI.length; i++) {
+    const s = SEKKI[i];
+    const next = SEKKI[(i + 1) % SEKKI.length];
+    
+    let startDate = new Date(year, s.month - 1, s.day);
+    let endDate;
+    
+    if (i === SEKKI.length - 1) {
+      endDate = new Date(year + 1, next.month - 1, next.day);
+    } else {
+      endDate = new Date(year, next.month - 1, next.day);
+    }
+    
+    // Handle year wrap for winter sekki
+    if (i >= 20) { // 立冬以降
+      if (date >= startDate) {
+        return { sekkiId: i, startDate, endDate };
+      }
+    }
+    
+    if (date >= startDate && date < endDate) {
+      return { sekkiId: i, startDate, endDate };
+    }
+  }
+  
+  // If before first sekki of year, use last sekki of previous year
+  const lastStart = new Date(year - 1, SEKKI[23].month - 1, SEKKI[23].day);
+  const lastEnd = new Date(year, SEKKI[0].month - 1, SEKKI[0].day);
+  return { sekkiId: 23, startDate: lastStart, endDate: lastEnd };
+}
+
+function getCurrentKou(date, sekkiId, startDate) {
+  const dayInSekki = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
+  const kouIndex = Math.min(Math.floor(dayInSekki / 5), 2);
+  return { kouIndex, kou: KOU[sekkiId][kouIndex] };
+}
+
+function getSeasonClass(season) {
+  const map = { spring: 'spring', summer: 'summer', autumn: 'autumn', winter: 'winter' };
+  return map[season] || 'spring';
+}
+
+function getSeasonEmoji(season) {
+  const map = { spring: '🌸', summer: '🌿', autumn: '🍂', winter: '❄️' };
+  return map[season] || '🌸';
+}
+
+function formatDate(d) {
+  return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+
+// ===== RENDER TODAY =====
+function renderToday() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const day = now.getDate();
+  const wday = WEEKDAYS[now.getDay()];
+
+  document.getElementById('gregorian-date').textContent = 
+    `${year}年${month}月`;
+  document.getElementById('today-day').textContent = day;
+  document.getElementById('today-weekday').textContent = `${wday}曜日`;
+
+  const { sekkiId, startDate, endDate } = getCurrentSekki(now);
+  const sekki = SEKKI[sekkiId];
+  const season = sekki.season;
+  const sc = getSeasonClass(season);
+
+  const card = document.getElementById('today-sekki-card');
+  card.className = `season-card card-${sc}`;
+
+  document.getElementById('today-sekki-name').textContent = sekki.name;
+  document.getElementById('today-sekki-romaji').textContent = sekki.romaji;
+  document.getElementById('today-sekki-dates').textContent = 
+    `${formatDate(startDate)} 〜 ${formatDate(endDate)}`;
+
+  const total = endDate - startDate;
+  const elapsed = now - startDate;
+  const pct = Math.round((elapsed / total) * 100);
+  document.getElementById('sekki-progress').style.width = `${pct}%`;
+  document.getElementById('sekki-progress-label').textContent = 
+    `節気の ${pct}% が経過しました`;
+
+  const { kouIndex, kou } = getCurrentKou(now, sekkiId, startDate);
+  document.getElementById('today-kou-name').textContent = kou.name;
+  document.getElementById('today-kou-romaji').textContent = kou.romaji;
+  document.getElementById('today-kou-desc').textContent = kou.desc;
+  document.getElementById('today-nature').textContent = sekki.nature;
+
+  // Notification banner
+  if ('Notification' in window && Notification.permission === 'default') {
+    document.getElementById('notif-banner').style.display = 'flex';
+  }
+}
+
+// ===== RENDER CALENDAR =====
+function renderCalendar() {
+  document.getElementById('cal-year-display').textContent = `${calYear}年`;
+  const list = document.getElementById('calendar-list');
+  list.innerHTML = '';
+
+  const today = new Date();
+
+  SEKKI.forEach((s, i) => {
+    const date = getSekkiDate(calYear, i);
+    const nextDate = i < SEKKI.length - 1 ? getSekkiDate(calYear, i + 1) : getSekkiDate(calYear + 1, 0);
+    const sc = getSeasonClass(s.season);
+    
+    const isToday = today >= date && today < nextDate && today.getFullYear() === calYear;
+    const todayCls = isToday ? ' today-row' : '';
+
+    const sekkiDateStr = `${date.getMonth()+1}月${date.getDate()}日`;
+    const seasonNames = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' };
+
+    const row = document.createElement('div');
+    row.innerHTML = `
+      <div class="sekki-row${todayCls}" onclick="toggleKouList(${i}, this)">
+        <div class="sekki-stripe stripe-${sc}"></div>
+        <div class="sekki-content">
+          <div class="sekki-left">
+            <div class="sekki-date-label">${sekkiDateStr}〜${isToday ? `<span class="today-marker">今日</span>` : ''}</div>
+            <div class="sekki-cal-name">${s.name}</div>
+          </div>
+          <div class="sekki-right">
+            <span class="sekki-season-badge badge-${sc}">${seasonNames[s.season]}</span>
+          </div>
+        </div>
+      </div>
+      <div class="kou-mini-list" id="kou-list-${i}">
+        ${KOU[i].map((k, ki) => `<div class="kou-mini-item">第${ki+1}候　${k.name}（${k.romaji}）</div>`).join('')}
+      </div>
+    `;
+    list.appendChild(row);
+
+    if (isToday) {
+      setTimeout(() => row.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
+    }
+  });
+}
+
+function toggleKouList(id, el) {
+  const list = document.getElementById(`kou-list-${id}`);
+  list.classList.toggle('open');
+}
+
+function changeYear(delta) {
+  calYear += delta;
+  renderCalendar();
+}
+
+// ===== RENDER DETAIL LIST =====
+function renderDetailList() {
+  const container = document.getElementById('detail-list-content');
+  container.innerHTML = '';
+
+  SEKKI.forEach((s, i) => {
+    const sc = getSeasonClass(s.season);
+    const seasonEmoji = getSeasonEmoji(s.season);
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-bottom: 12px; cursor: pointer;';
+    div.innerHTML = `
+      <div class="sekki-row" onclick="showDetail(${i}, 'detail-list')">
+        <div class="sekki-stripe stripe-${sc}"></div>
+        <div class="sekki-content">
+          <div class="sekki-left">
+            <div class="sekki-date-label">${s.month}月${s.day}日頃〜</div>
+            <div class="sekki-cal-name">${s.name}</div>
+          </div>
+          <div style="font-size:22px">${seasonEmoji}</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ===== DETAIL SCREEN =====
+function showDetail(sekkiId, from) {
+  fromScreen = from || 'detail-list';
+  currentDetailId = sekkiId;
+  const s = SEKKI[sekkiId];
+  const sc = getSeasonClass(s.season);
+  const seasonEmoji = getSeasonEmoji(s.season);
+
+  const content = document.getElementById('detail-content');
+  content.innerHTML = `
+    <div class="detail-hero card-${sc}">
+      <div class="detail-season-char">${seasonEmoji}</div>
+      <div class="detail-sekki-name">${s.name}</div>
+      <div class="detail-sekki-romaji">${s.romaji} — ${s.en}</div>
+      <div class="detail-sekki-dates">${s.month}月${s.day}日頃〜</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">✦ 節気について</div>
+      <div class="detail-desc">${s.desc}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">✦ 自然のたより</div>
+      <div class="detail-desc">${s.nature}</div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-section-title">✦ 七十二候</div>
+      ${KOU[sekkiId].map((k, ki) => `
+        <div class="kou-detail-item">
+          <div class="kou-detail-number">第${sekkiId * 3 + ki + 1}候</div>
+          <div class="kou-detail-name">${k.name}</div>
+          <div class="kou-detail-romaji">${k.romaji}</div>
+          <div class="kou-detail-desc">${k.desc}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Show detail screen
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-detail').classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function backFromDetail() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${fromScreen}`).classList.add('active');
+  
+  // Update nav
+  const navMap = { 'today': 0, 'calendar': 1, 'detail-list': 2 };
+  const navBtns = document.querySelectorAll('nav button');
+  navBtns.forEach((btn, i) => {
+    btn.classList.toggle('active', i === (navMap[fromScreen] ?? 2));
+  });
+}
+
+// ===== NAVIGATION =====
+function showScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (name === 'calendar') renderCalendar();
+  if (name === 'detail-list') renderDetailList();
+}
+
+function goToday() {
+  const navBtns = document.querySelectorAll('nav button');
+  showScreen('today', navBtns[0]);
+}
+
+// ===== NOTIFICATIONS =====
+function requestNotif() {
+  if ('Notification' in window) {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        document.getElementById('notif-banner').style.display = 'none';
+        new Notification('和暦こよみ', {
+          body: '節気の変わり目をお知らせします 🌸',
+          icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🌸</text></svg>'
+        });
+      }
+    });
+  }
+}
+
+// ===== INIT =====
+renderToday();
+</script>
+
+</body>
+</html>
