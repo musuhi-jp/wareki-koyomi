@@ -735,6 +735,174 @@
     letter-spacing: 0.1em;
   }
 
+
+  /* ===== 文ふみ文案カード ===== */
+  .fumi-card {
+    background: var(--washi);
+    border: 1px solid rgba(139,69,19,0.12);
+    border-radius: 16px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s ease 0.35s both;
+  }
+
+  .fumi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .fumi-title {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+  }
+
+  .fumi-kou-badge {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+
+  /* タブ */
+  .fumi-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(139,69,19,0.1);
+    padding-bottom: 10px;
+  }
+
+  .fumi-tab {
+    flex: 1;
+    padding: 7px 4px;
+    background: none;
+    border: 1px solid rgba(139,69,19,0.18);
+    border-radius: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    color: var(--mist);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .fumi-tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* 書き出し・結び切替 */
+  .fumi-type-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .fumi-type-btn {
+    flex: 1;
+    padding: 6px;
+    background: none;
+    border: 1px solid rgba(139,69,19,0.15);
+    border-radius: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 11px;
+    color: var(--mist);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .fumi-type-btn.active {
+    background: rgba(139,69,19,0.08);
+    color: var(--accent);
+    border-color: rgba(139,69,19,0.3);
+  }
+
+  /* 文案表示エリア */
+  .fumi-body {
+    min-height: 80px;
+  }
+
+  .fumi-loading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    color: var(--mist);
+    font-size: 13px;
+  }
+
+  .fumi-spinner {
+    width: 16px; height: 16px;
+    border: 2px solid rgba(139,69,19,0.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .fumi-text-block {
+    font-size: 14px;
+    line-height: 2.0;
+    color: #444;
+    padding: 2px 0;
+  }
+
+  .fumi-text-block.fade-in {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .fumi-copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 16px;
+    background: none;
+    border: 1px solid rgba(139,69,19,0.25);
+    border-radius: 8px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+
+  .fumi-copy-btn:hover {
+    background: rgba(139,69,19,0.06);
+  }
+
+  .fumi-copy-btn.copied {
+    color: #4a9e6b;
+    border-color: #4a9e6b;
+  }
+
+  .fumi-error {
+    font-size: 13px;
+    color: #c0392b;
+    line-height: 1.7;
+    padding: 8px 0;
+  }
+
+  .fumi-regenerate {
+    font-size: 11px;
+    color: var(--mist);
+    background: none;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    margin-top: 8px;
+    padding: 0;
+    display: block;
+  }
+
 </style>
 </head>
 <body>
@@ -816,6 +984,31 @@
     <div class="nature-note">
       <div class="nature-note-title">✦ 自然のたより</div>
       <div class="nature-note-text" id="today-nature"></div>
+    </div>
+
+    <!-- ふみ文案カード -->
+    <div class="fumi-card">
+      <div class="fumi-header">
+        <div class="fumi-title">✦ 時候の文案</div>
+        <div class="fumi-kou-badge" id="fumi-kou-badge"></div>
+      </div>
+
+      <!-- 女性・男性・共用タブ -->
+      <div class="fumi-tabs">
+        <button class="fumi-tab active" onclick="switchFumiGender('f', this)">女性用</button>
+        <button class="fumi-tab" onclick="switchFumiGender('m', this)">男性用</button>
+        <button class="fumi-tab" onclick="switchFumiGender('n', this)">共用</button>
+      </div>
+
+      <!-- 書き出し・結びタブ -->
+      <div class="fumi-type-tabs">
+        <button class="fumi-type-btn active" onclick="switchFumiType('opening', this)">書き出し</button>
+        <button class="fumi-type-btn" onclick="switchFumiType('closing', this)">結び</button>
+      </div>
+
+      <div class="fumi-body" id="fumi-body">
+        <div class="fumi-loading"><div class="fumi-spinner"></div>候の文案を生成中…</div>
+      </div>
     </div>
   </div>
 
@@ -1424,6 +1617,143 @@ function renderKyureki() {
   document.getElementById('kyureki-month-meaning').textContent = ky.meaning;
 }
 
+
+// ===== 時候の文案（Claude API動的生成）=====
+let _fumiCache = {};       // キャッシュ: kouName_gender_type → 文章
+let _fumiCurrentKou = '';  // 今表示中の候名
+let _fumiGender = 'f';     // f / m / n
+let _fumiType = 'opening'; // opening / closing
+let _fumiGenerating = false;
+
+const FUMI_GENDER_LABEL = { f: '女性用', m: '男性用', n: '共用' };
+const FUMI_TYPE_LABEL   = { opening: '書き出し', closing: '結び' };
+
+function switchFumiGender(gender, btn) {
+  _fumiGender = gender;
+  document.querySelectorAll('.fumi-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showOrGenerateFumi();
+}
+
+function switchFumiType(type, btn) {
+  _fumiType = type;
+  document.querySelectorAll('.fumi-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  showOrGenerateFumi();
+}
+
+function fumiCacheKey() {
+  return `${_fumiCurrentKou}__${_fumiGender}__${_fumiType}`;
+}
+
+function showOrGenerateFumi() {
+  const key = fumiCacheKey();
+  if (_fumiCache[key]) {
+    renderFumiText(_fumiCache[key]);
+    return;
+  }
+  generateFumi();
+}
+
+function renderFumiText(text) {
+  const body = document.getElementById('fumi-body');
+  body.innerHTML = `
+    <div class="fumi-text-block fade-in">${text.replace(/\n/g, '<br>')}</div>
+    <button class="fumi-copy-btn" onclick="copyFumi(this)">
+      <span>📋</span> コピー
+    </button>
+    <button class="fumi-regenerate" onclick="regenerateFumi()">別の文案を生成する</button>
+  `;
+}
+
+function copyFumi(btn) {
+  const text = document.querySelector('.fumi-text-block')?.innerText || '';
+  navigator.clipboard?.writeText(text).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = '<span>✓</span> コピーしました';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = '<span>📋</span> コピー';
+    }, 2000);
+  });
+}
+
+function regenerateFumi() {
+  // キャッシュ削除して再生成
+  delete _fumiCache[fumiCacheKey()];
+  generateFumi();
+}
+
+async function generateFumi() {
+  if (_fumiGenerating) return;
+  _fumiGenerating = true;
+
+  const body = document.getElementById('fumi-body');
+  body.innerHTML = '<div class="fumi-loading"><div class="fumi-spinner"></div>文案を生成中…</div>';
+
+  const genderText = FUMI_GENDER_LABEL[_fumiGender];
+  const typeText   = FUMI_TYPE_LABEL[_fumiType];
+  const kouName    = _fumiCurrentKou;
+  const now        = new Date();
+  const dateStr    = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+
+  const prompt = `あなたは日本の手紙・メール文化に精通した文章の専門家です。
+以下の条件で、フォーマルなビジネスメール・手紙に使える時候の${typeText}の文案を1つ書いてください。
+
+【条件】
+- 今日の日付: ${dateStr}
+- 七十二候: ${kouName}
+- 対象: ${genderText}（${_fumiGender === 'f' ? '女性が書く文章として、柔らかく品のある表現' : _fumiGender === 'm' ? '男性が書く文章として、落ち着いた格調ある表現' : '性別を問わず使える表現'}）
+- 文体: フォーマル（ビジネスメール・手紙）
+- 長さ: 1〜2文、40〜70字程度
+- ${typeText === '書き出し' ? '書き出し：「〜の候」「〜の季節となりました」など時候の挨拶から始める自然な冒頭文' : '結び：「どうぞ〜」「ご自愛ください」「〜のほど心よりお祈り申し上げます」などで締めくくる文'}
+
+七十二候「${kouName}」の自然の情景を生かした、情緒ある日本語で書いてください。
+文案のみを出力し、説明・前置き・記号は一切つけないでください。`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const text = data.content?.find(c => c.type === 'text')?.text?.trim() || '';
+    if (!text) throw new Error('文案を取得できませんでした');
+
+    _fumiCache[fumiCacheKey()] = text;
+    renderFumiText(text);
+
+  } catch (err) {
+    body.innerHTML = `
+      <div class="fumi-error">文案の生成に失敗しました。<br>インターネット接続を確認してください。</div>
+      <button class="fumi-regenerate" onclick="regenerateFumi()">再試行する</button>
+    `;
+    console.error('Fumi generation error:', err);
+  } finally {
+    _fumiGenerating = false;
+  }
+}
+
+function initFumi(kouName) {
+  if (_fumiCurrentKou === kouName) {
+    // 同じ候なら再生成しない（キャッシュ or 既表示）
+    showOrGenerateFumi();
+    return;
+  }
+  _fumiCurrentKou = kouName;
+  _fumiCache = {}; // 候が変わったらキャッシュリセット
+  document.getElementById('fumi-kou-badge').textContent = kouName;
+  showOrGenerateFumi();
+}
+
 // ===== RENDER TODAY =====
 function renderToday() {
   const now = new Date();
@@ -1464,6 +1794,7 @@ function renderToday() {
   document.getElementById('today-nature').textContent = sekki.nature;
 
   renderKyureki();
+  initFumi(kou.name);
   if (_sunLat === null) initSunLocation();
   else calcAndRenderSun();
 
