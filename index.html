@@ -120,31 +120,117 @@
 
   /* ===== TODAY SCREEN ===== */
   .date-banner {
-    text-align: center;
-    padding: 28px 0 24px;
     animation: fadeUp 0.5s ease;
+    margin-bottom: 12px;
+  }
+
+  .top-row {
+    display: flex;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 0;
+  }
+
+  /* 日付カード */
+  .date-card {
+    background: #7a9bbf;
+    border-radius: 16px;
+    padding: 14px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    flex-shrink: 0;
   }
 
   .gregorian-date {
-    font-size: 15px;
-    color: var(--mist);
-    letter-spacing: 0.12em;
-    margin-bottom: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    letter-spacing: 0.15em;
+    margin-bottom: 4px;
   }
 
   .big-day {
     font-family: 'Noto Serif JP', serif;
-    font-size: 64px;
+    font-size: 48px;
     font-weight: 300;
     line-height: 1;
-    color: var(--ink);
-    margin-bottom: 4px;
+    color: #fff;
+    margin-bottom: 3px;
   }
 
   .big-day-label {
-    font-size: 14px;
-    color: var(--mist);
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
     letter-spacing: 0.1em;
+  }
+
+  /* 旧暦カード（top-row内） */
+  .kyureki-card-top {
+    background: var(--washi);
+    border: 1px solid rgba(139,69,19,0.12);
+    border-radius: 16px;
+    padding: 13px 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    animation: fadeUp 0.5s ease 0.1s both;
+  }
+
+  .kyureki-top-label {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.18em;
+    margin-bottom: 7px;
+  }
+
+  .kyureki-top-main {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  .kyureki-top-daynum {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 38px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .kyureki-top-right {}
+
+  .kyureki-top-monthname {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+  }
+
+  .kyureki-top-daykanji {
+    font-size: 11px;
+    color: var(--mist);
+  }
+
+  .kyureki-top-meta {
+    border-top: 0.5px solid rgba(139,69,19,0.12);
+    padding-top: 6px;
+  }
+
+  .kyureki-top-romaji {
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 1px;
+  }
+
+  .kyureki-top-meaning {
+    font-size: 11px;
+    color: var(--mist);
+    line-height: 1.5;
   }
 
   /* Season card */
@@ -548,86 +634,11 @@
     margin-left: 8px;
   }
 
-  /* 旧暦 card */
-  .kyureki-card {
-    background: var(--washi);
-    border: 1px solid rgba(139,69,19,0.12);
-    border-radius: 16px;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    animation: fadeUp 0.5s ease 0.15s both;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
 
-  .kyureki-left {
-    text-align: center;
-    flex-shrink: 0;
-  }
 
-  .kyureki-label {
-    font-size: 11px;
-    color: var(--mist);
-    letter-spacing: 0.15em;
-    margin-bottom: 6px;
-  }
-
-  .kyureki-day-num {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 44px;
-    font-weight: 300;
-    color: var(--accent);
-    line-height: 1;
-    margin-bottom: 2px;
-  }
-
-  .kyureki-day-kanji {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 13px;
-    color: var(--mist);
-    letter-spacing: 0.1em;
-  }
-
-  .kyureki-divider {
-    width: 1px;
-    height: 60px;
-    background: rgba(139,69,19,0.15);
-    flex-shrink: 0;
-  }
-
-  .kyureki-right { flex: 1; }
-
-  .kyureki-month-name {
-    font-family: 'Noto Serif JP', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--ink);
-    letter-spacing: 0.05em;
-    margin-bottom: 4px;
-  }
-
-  .kyureki-month-romaji {
-    font-size: 12px;
-    color: var(--mist);
-    letter-spacing: 0.1em;
-    margin-bottom: 6px;
-  }
-
-  .kyureki-month-meaning {
-    font-size: 13px;
-    color: #555;
-    line-height: 1.7;
-  }
-
-  /* 日の出・日の入りカード */
+  /* 日の出・日の入りカード（統合のため非表示） */
   .sun-card {
-    background: linear-gradient(135deg, #fff8ee 0%, #fdf0e0 100%);
-    border: 1px solid rgba(200,149,42,0.18);
-    border-radius: 16px;
-    padding: 16px 20px;
-    margin-bottom: 16px;
-    animation: fadeUp 0.5s ease 0.18s both;
+    display: none;
   }
 
   .sun-card-header {
@@ -903,6 +914,152 @@
     display: block;
   }
 
+
+  /* ===== 天気カード（統合版）===== */
+  .weather-card {
+    background: linear-gradient(160deg, #eef4fb 0%, #e8f0f8 100%);
+    border: 1px solid rgba(74,111,165,0.18);
+    border-radius: 16px;
+    padding: 15px 17px;
+    margin-bottom: 16px;
+    animation: fadeUp 0.5s ease 0.15s both;
+  }
+
+  .weather-sun-divider {
+    border-top: 0.5px solid rgba(74,111,165,0.15);
+    margin: 10px 0 10px;
+  }
+
+  .weather-sun-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .weather-sun-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .weather-sun-icon { font-size: 15px; }
+
+  .weather-sun-label {
+    font-size: 9px;
+    color: var(--mist);
+    letter-spacing: 0.08em;
+    margin-bottom: 1px;
+  }
+
+  .weather-sun-time {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  .weather-sun-dur {
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  .weather-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .weather-label {
+    font-size: 11px;
+    color: #4a6fa5;
+    letter-spacing: 0.2em;
+  }
+
+  .weather-location {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+
+  .weather-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+
+  .weather-icon {
+    font-size: 42px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .weather-desc-block {}
+
+  .weather-desc {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+
+  .weather-temp-now {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .weather-temp-now span {
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  .weather-sub-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(74,111,165,0.12);
+  }
+
+  .weather-sub-item {
+    text-align: center;
+  }
+
+  .weather-sub-label {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.08em;
+    margin-bottom: 3px;
+  }
+
+  .weather-sub-value {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  .weather-loading {
+    font-size: 12px;
+    color: var(--mist);
+    padding: 8px 0;
+    letter-spacing: 0.1em;
+  }
+
+  .weather-error {
+    font-size: 12px;
+    color: var(--mist);
+    padding: 4px 0;
+    line-height: 1.7;
+  }
+
 </style>
 </head>
 <body>
@@ -923,23 +1080,28 @@
   <!-- TODAY SCREEN -->
   <div class="screen active" id="screen-today">
     <div class="date-banner">
-      <div class="gregorian-date" id="gregorian-date"></div>
-      <div class="big-day" id="today-day"></div>
-      <div class="big-day-label" id="today-weekday"></div>
-    </div>
-
-    <!-- 旧暦カード -->
-    <div class="kyureki-card" id="kyureki-card">
-      <div class="kyureki-left">
-        <div class="kyureki-label">旧暦</div>
-        <div class="kyureki-day-num" id="kyureki-day-num">—</div>
-        <div class="kyureki-day-kanji" id="kyureki-day-kanji">日</div>
-      </div>
-      <div class="kyureki-divider"></div>
-      <div class="kyureki-right">
-        <div class="kyureki-month-name" id="kyureki-month-name">—月</div>
-        <div class="kyureki-month-romaji" id="kyureki-month-romaji"></div>
-        <div class="kyureki-month-meaning" id="kyureki-month-meaning"></div>
+      <div class="top-row">
+        <!-- 日付カード -->
+        <div class="date-card">
+          <div class="gregorian-date" id="gregorian-date"></div>
+          <div class="big-day" id="today-day"></div>
+          <div class="big-day-label" id="today-weekday"></div>
+        </div>
+        <!-- 旧暦カード -->
+        <div class="kyureki-card-top">
+          <div class="kyureki-top-label">旧 暦</div>
+          <div class="kyureki-top-main">
+            <div class="kyureki-top-daynum" id="kyureki-day-num">—</div>
+            <div class="kyureki-top-right">
+              <div class="kyureki-top-monthname" id="kyureki-month-name">—月</div>
+              <div class="kyureki-top-daykanji" id="kyureki-day-kanji">日</div>
+            </div>
+          </div>
+          <div class="kyureki-top-meta">
+            <div class="kyureki-top-romaji" id="kyureki-month-romaji"></div>
+            <div class="kyureki-top-meaning" id="kyureki-month-meaning"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -954,6 +1116,21 @@
       </div>
       <div id="sun-card-body">
         <div class="sun-loading">位置情報を取得中…</div>
+      </div>
+    </div>
+
+    <!-- 天気＋日の出日の入り統合カード -->
+    <div class="weather-card">
+      <div class="weather-header">
+        <div class="weather-label">✦ 今日の天気</div>
+        <div class="weather-location" id="weather-location-name"></div>
+      </div>
+      <div id="weather-body">
+        <div class="weather-loading">天気を取得中…</div>
+      </div>
+      <div id="weather-sun-section" style="display:none">
+        <div class="weather-sun-divider"></div>
+        <div class="weather-sun-grid" id="weather-sun-grid"></div>
       </div>
     </div>
 
@@ -1363,6 +1540,7 @@ function useSunDefault() {
   _sunLocationName = '東京（仮）';
   document.getElementById('sun-location-name').textContent = _sunLocationName;
   calcAndRenderSun();
+  fetchAndRenderWeather(_sunLat, _sunLon, _sunLocationName);
 }
 
 function reverseGeocodeForSun(lat, lon) {
@@ -1372,10 +1550,12 @@ function reverseGeocodeForSun(lat, lon) {
       const a = data.address;
       _sunLocationName = a.prefecture || a.state || a.city || '現在地';
       document.getElementById('sun-location-name').textContent = _sunLocationName;
+      fetchAndRenderWeather(_sunLat, _sunLon, _sunLocationName);
     })
     .catch(() => {
       _sunLocationName = '現在地';
       document.getElementById('sun-location-name').textContent = _sunLocationName;
+      fetchAndRenderWeather(_sunLat, _sunLon, _sunLocationName);
     });
 }
 
@@ -1444,35 +1624,110 @@ function calcAndRenderSun() {
   const dayLen  = _sunsetMs - _sunriseMs;
   const nightLen = 86400000 - dayLen;
 
-  document.getElementById('sun-card-body').innerHTML = `
-    <div class="sun-row">
-      <div class="sun-item">
-        <div class="sun-item-icon">🌅</div>
-        <div class="sun-item-body">
-          <div class="sun-item-label">日の出</div>
-          <div class="sun-item-time">${fmtTime(_sunriseMs)}</div>
-        </div>
+  const sunSection = document.getElementById('weather-sun-section');
+  const sunGrid = document.getElementById('weather-sun-grid');
+  if (sunSection && sunGrid) {
+    sunGrid.innerHTML = `
+      <div class="weather-sun-item">
+        <span class="weather-sun-icon">🌅</span>
+        <div><div class="weather-sun-label">日の出</div><div class="weather-sun-time">${fmtTime(_sunriseMs)}</div></div>
       </div>
-      <div class="sun-item">
-        <div class="sun-item-icon">🌇</div>
-        <div class="sun-item-body">
-          <div class="sun-item-label">日の入り</div>
-          <div class="sun-item-time">${fmtTime(_sunsetMs)}</div>
-        </div>
+      <div class="weather-sun-item">
+        <span class="weather-sun-icon">🌇</span>
+        <div><div class="weather-sun-label">日の入り</div><div class="weather-sun-time">${fmtTime(_sunsetMs)}</div></div>
       </div>
-    </div>
-    <div class="sun-daylen-row">
-      <div class="sun-daylen-item">
-        <div class="sun-daylen-label">☀ 昼の長さ</div>
-        <div class="sun-daylen-value">${fmtDuration(dayLen)}</div>
+      <div class="weather-sun-item">
+        <span class="weather-sun-icon">☀️</span>
+        <div><div class="weather-sun-label">昼の長さ</div><div class="weather-sun-dur">${fmtDuration(dayLen)}</div></div>
       </div>
-      <div class="sun-daylen-item">
-        <div class="sun-daylen-label">🌙 夜の長さ</div>
-        <div class="sun-daylen-value">${fmtDuration(nightLen)}</div>
+      <div class="weather-sun-item">
+        <span class="weather-sun-icon">🌙</span>
+        <div><div class="weather-sun-label">夜の長さ</div><div class="weather-sun-dur">${fmtDuration(nightLen)}</div></div>
       </div>
-    </div>
-  `;
+    `;
+    sunSection.style.display = 'block';
+  }
 }
+
+// ===== 天気取得（Open-Meteo）=====
+const WMO_CODE = {
+  0:  { label: '快晴',     icon: '☀️' },
+  1:  { label: '晴れ',     icon: '🌤️' },
+  2:  { label: '一部曇り', icon: '⛅' },
+  3:  { label: '曇り',     icon: '☁️' },
+  45: { label: '霧',       icon: '🌫️' },
+  48: { label: '霧氷',     icon: '🌫️' },
+  51: { label: '霧雨',     icon: '🌦️' },
+  53: { label: '霧雨',     icon: '🌦️' },
+  55: { label: '強い霧雨', icon: '🌧️' },
+  61: { label: '小雨',     icon: '🌧️' },
+  63: { label: '雨',       icon: '🌧️' },
+  65: { label: '強い雨',   icon: '🌧️' },
+  71: { label: '小雪',     icon: '🌨️' },
+  73: { label: '雪',       icon: '❄️' },
+  75: { label: '強い雪',   icon: '❄️' },
+  77: { label: 'あられ',   icon: '🌨️' },
+  80: { label: 'にわか雨', icon: '🌦️' },
+  81: { label: 'にわか雨', icon: '🌦️' },
+  82: { label: '強いにわか雨', icon: '🌧️' },
+  85: { label: 'にわか雪', icon: '🌨️' },
+  86: { label: '強いにわか雪', icon: '🌨️' },
+  95: { label: '雷雨',     icon: '⛈️' },
+  96: { label: '雷雨+ひょう', icon: '⛈️' },
+  99: { label: '激しい雷雨', icon: '⛈️' },
+};
+
+async function fetchAndRenderWeather(lat, lon, locationName) {
+  document.getElementById('weather-location-name').textContent = locationName || '';
+  document.getElementById('weather-body').innerHTML =
+    '<div class="weather-loading">天気を取得中…</div>';
+
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+      + `&current=temperature_2m,weathercode`
+      + `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max`
+      + `&timezone=Asia%2FTokyo&forecast_days=1`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const code    = data.current.weathercode;
+    const tempNow = Math.round(data.current.temperature_2m);
+    const tempMax = Math.round(data.daily.temperature_2m_max[0]);
+    const tempMin = Math.round(data.daily.temperature_2m_min[0]);
+    const precip  = data.daily.precipitation_probability_max[0] ?? '—';
+
+    const wmo = WMO_CODE[code] || { label: '不明', icon: '🌡️' };
+
+    document.getElementById('weather-body').innerHTML = `
+      <div class="weather-main">
+        <div class="weather-icon">${wmo.icon}</div>
+        <div class="weather-desc-block">
+          <div class="weather-desc">${wmo.label}</div>
+          <div class="weather-temp-now">${tempNow}<span>°C</span></div>
+        </div>
+      </div>
+      <div class="weather-sub-row">
+        <div class="weather-sub-item">
+          <div class="weather-sub-label">🌡 最高</div>
+          <div class="weather-sub-value">${tempMax}°C</div>
+        </div>
+        <div class="weather-sub-item">
+          <div class="weather-sub-label">🌡 最低</div>
+          <div class="weather-sub-value">${tempMin}°C</div>
+        </div>
+        <div class="weather-sub-item">
+          <div class="weather-sub-label">☔ 降水確率</div>
+          <div class="weather-sub-value">${precip}%</div>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    document.getElementById('weather-body').innerHTML =
+      '<div class="weather-error">天気情報を取得できませんでした</div>';
+  }
+}
+
 
 // ===== 旧暦計算（Meeus epoch・天保暦準拠）=====
 const KYUREKI_MONTHS = [
@@ -1613,7 +1868,7 @@ function renderKyureki() {
   document.getElementById('kyureki-day-num').textContent = ky.day;
   document.getElementById('kyureki-day-kanji').textContent = ky.dayKanji + '日';
   document.getElementById('kyureki-month-name').textContent = ky.monthName;
-  document.getElementById('kyureki-month-romaji').textContent = `${ky.romaji} — 旧暦${ky.monthNum}月`;
+  document.getElementById('kyureki-month-romaji').textContent = `${ky.romaji}　旧暦${ky.monthNum}月`;
   document.getElementById('kyureki-month-meaning').textContent = ky.meaning;
 }
 
