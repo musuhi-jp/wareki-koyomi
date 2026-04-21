@@ -1020,31 +1020,39 @@
     font-weight: 300;
   }
 
-  .weather-sub-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(74,111,165,0.12);
+  .weather-right-info {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    flex-shrink: 0;
   }
 
-  .weather-sub-item {
-    text-align: center;
+  .weather-right-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
   }
 
-  .weather-sub-label {
+  .weather-right-label {
     font-size: 10px;
     color: var(--mist);
-    letter-spacing: 0.08em;
-    margin-bottom: 3px;
+    letter-spacing: 0.05em;
   }
 
-  .weather-sub-value {
+  .weather-right-value {
     font-family: 'Noto Serif JP', serif;
-    font-size: 15px;
+    font-size: 14px;
+    font-weight: 400;
     color: var(--ink);
-    letter-spacing: 0.02em;
+    min-width: 34px;
+    text-align: right;
   }
+
+  .weather-right-value.hi { color: #c0522a; }
+  .weather-right-value.lo { color: #4a6fa5; }
 
   .weather-loading {
     font-size: 12px;
@@ -1706,19 +1714,19 @@ async function fetchAndRenderWeather(lat, lon, locationName) {
           <div class="weather-desc">${wmo.label}</div>
           <div class="weather-temp-now">${tempNow}<span>°C</span></div>
         </div>
-      </div>
-      <div class="weather-sub-row">
-        <div class="weather-sub-item">
-          <div class="weather-sub-label">🌡 最高</div>
-          <div class="weather-sub-value">${tempMax}°C</div>
-        </div>
-        <div class="weather-sub-item">
-          <div class="weather-sub-label">🌡 最低</div>
-          <div class="weather-sub-value">${tempMin}°C</div>
-        </div>
-        <div class="weather-sub-item">
-          <div class="weather-sub-label">☔ 降水確率</div>
-          <div class="weather-sub-value">${precip}%</div>
+        <div class="weather-right-info">
+          <div class="weather-right-item">
+            <span class="weather-right-label">最高</span>
+            <span class="weather-right-value hi">${tempMax}°</span>
+          </div>
+          <div class="weather-right-item">
+            <span class="weather-right-label">最低</span>
+            <span class="weather-right-value lo">${tempMin}°</span>
+          </div>
+          <div class="weather-right-item">
+            <span class="weather-right-label">降水</span>
+            <span class="weather-right-value">${precip}%</span>
+          </div>
         </div>
       </div>
     `;
