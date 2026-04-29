@@ -1068,6 +1068,39 @@
     line-height: 1.7;
   }
 
+
+  /* 月相表示 */
+  .kyureki-moon-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 7px;
+    padding-top: 7px;
+    border-top: 0.5px solid rgba(139,69,19,0.12);
+  }
+
+  .kyureki-moon-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .kyureki-moon-info {}
+
+  .kyureki-moon-name {
+    font-family: 'Noto Serif JP', serif;
+    font-size: 13px;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    margin-bottom: 1px;
+  }
+
+  .kyureki-moon-age {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+
 </style>
 </head>
 <body>
@@ -1108,6 +1141,13 @@
           <div class="kyureki-top-meta">
             <div class="kyureki-top-romaji" id="kyureki-month-romaji"></div>
             <div class="kyureki-top-meaning" id="kyureki-month-meaning"></div>
+            <div class="kyureki-moon-row" id="kyureki-moon-row" style="display:none">
+              <div class="kyureki-moon-icon" id="kyureki-moon-icon"></div>
+              <div class="kyureki-moon-info">
+                <div class="kyureki-moon-name" id="kyureki-moon-name"></div>
+                <div class="kyureki-moon-age" id="kyureki-moon-age"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1869,6 +1909,19 @@ function calcKyureki(date) {
   };
 }
 
+// 月齢から月相を取得
+function getMoonPhase(age) {
+  // 月齢0〜29.53を8相に分類
+  if (age < 1.5  || age >= 28.0) return { icon: '🌑', name: '新月'     };
+  if (age < 6.4)                 return { icon: '🌒', name: '三日月'   };
+  if (age < 10.4)                return { icon: '🌓', name: '上弦の月' };
+  if (age < 13.5)                return { icon: '🌔', name: '十日夜'   };
+  if (age < 16.1)                return { icon: '🌕', name: '満月'     };
+  if (age < 19.5)                return { icon: '🌖', name: '十六夜'   };
+  if (age < 25.0)                return { icon: '🌗', name: '下弦の月' };
+  return { icon: '🌘', name: '晦日月' };
+}
+
 function renderKyureki() {
   const now = new Date();
   const ky = calcKyureki(now);
@@ -1878,6 +1931,15 @@ function renderKyureki() {
   document.getElementById('kyureki-month-name').textContent = ky.monthName;
   document.getElementById('kyureki-month-romaji').textContent = `${ky.romaji}　旧暦${ky.monthNum}月`;
   document.getElementById('kyureki-month-meaning').textContent = ky.meaning;
+
+  // 月齢・月相を計算して表示
+  const jd = toJDutc(now);
+  const age = moonAgeM(jd);
+  const phase = getMoonPhase(age);
+  document.getElementById('kyureki-moon-icon').textContent = phase.icon;
+  document.getElementById('kyureki-moon-name').textContent = phase.name;
+  document.getElementById('kyureki-moon-age').textContent = `月齢 ${age.toFixed(1)}`;
+  document.getElementById('kyureki-moon-row').style.display = 'flex';
 }
 
 
