@@ -1262,76 +1262,76 @@
 <script>
 // ===== DATA =====
 const SEKKI = [
-  { id: 0, name: "小寒", romaji: "Shōkan", en: "Minor Cold", month: 1, day: 6, season: "winter",
+  { id: 0, name: "小寒", romaji: "Shōkan", en: "Minor Cold", month: 1, day: 5, hour: 17, minute: 23, season: "winter",
     desc: "寒さが本格的になり始める頃。「寒の入り」とも言い、この日から節分（立春の前日）までの期間を「寒中」と呼びます。",
     nature: "野鳥が群れをなして飛び、山々は雪に覆われ始めます。水面は薄氷を張り、草木は静かに春を待ちます。" },
-  { id: 1, name: "大寒", romaji: "Daikan", en: "Major Cold", month: 1, day: 20, season: "winter",
+  { id: 1, name: "大寒", romaji: "Daikan", en: "Major Cold", month: 1, day: 20, hour: 10, minute: 45, season: "winter",
     desc: "一年で最も寒さが厳しい時期。寒稽古や寒中水泳など、寒さを活かした行事が行われます。この頃の水は「寒水（かんすい）」と呼ばれ、雑菌が少なく保存に向くとされました。",
     nature: "凍てつく朝の空気の中、梅の蕾がほんのりと膨らみ始めます。冬の底から、春の気配がそっと動き出す時です。" },
-  { id: 2, name: "立春", romaji: "Risshun", en: "Start of Spring", month: 2, day: 4, season: "spring",
+  { id: 2, name: "立春", romaji: "Risshun", en: "Start of Spring", month: 2, day: 4, hour: 5, minute: 2, season: "spring",
     desc: "暦の上での春の始まり。「八十八夜」「二百十日」などの起算日となります。節分の翌日にあたり、この日から立夏の前日までが春とされます。",
     nature: "梅が咲き始め、野の草が芽吹きます。春風が柔らかく頬を撫で、日差しも少しずつ力を取り戻してきます。" },
-  { id: 3, name: "雨水", romaji: "Usui", en: "Rain Water", month: 2, day: 19, season: "spring",
+  { id: 3, name: "雨水", romaji: "Usui", en: "Rain Water", month: 2, day: 19, hour: 0, minute: 52, season: "spring",
     desc: "雪が雨に変わり、氷が溶けて水になる頃。農耕の準備を始める目安とされてきました。土の中で眠っていた生き物たちが動き始めます。",
     nature: "春雨がしっとりと大地を潤し、タンポポや土筆が顔を出し始めます。川の水かさが増し、生命の営みが静かに始まります。" },
-  { id: 4, name: "啓蟄", romaji: "Keichitsu", en: "Awakening of Insects", month: 3, day: 6, season: "spring",
+  { id: 4, name: "啓蟄", romaji: "Keichitsu", en: "Awakening of Insects", month: 3, day: 5, hour: 22, minute: 59, season: "spring",
     desc: "地中で冬ごもりしていた虫たちが、春の暖かさに目覚めて地上に出てくる頃。「啓」は開く、「蟄」は土の中で冬眠する虫を意味します。",
     nature: "モンシロチョウが舞い、ミミズが土を耕し始めます。カエルの声が田んぼから聞こえ、生命の鼓動が大地に満ちていきます。" },
-  { id: 5, name: "春分", romaji: "Shunbun", en: "Vernal Equinox", month: 3, day: 21, season: "spring",
+  { id: 5, name: "春分", romaji: "Shunbun", en: "Vernal Equinox", month: 3, day: 20, hour: 23, minute: 46, season: "spring",
     desc: "昼と夜の長さが同じになる日。この日を中心とした前後3日間を「彼岸」と呼び、お墓参りをする風習があります。太陽が真東から昇り、真西に沈みます。",
     nature: "桜の蕾が膨らみ、菜の花が黄色く輝きます。ツバメが南から帰ってきて、春の音が野山に広がります。" },
-  { id: 6, name: "清明", romaji: "Seimei", en: "Clear and Bright", month: 4, day: 5, season: "spring",
+  { id: 6, name: "清明", romaji: "Seimei", en: "Clear and Bright", month: 4, day: 5, hour: 3, minute: 40, season: "spring",
     desc: "万物が清々しく明るく輝き、生命が躍動する頃。「清明節」として東アジア各地で祖先を祀る行事が行われます。",
     nature: "山野は緑に包まれ、桜が満開を迎えます。空は澄み渡り、花の香りが風に乗って運ばれてきます。" },
-  { id: 7, name: "穀雨", romaji: "Kokuu", en: "Grain Rains", month: 4, day: 20, season: "spring",
+  { id: 7, name: "穀雨", romaji: "Kokuu", en: "Grain Rains", month: 4, day: 20, hour: 10, minute: 39, season: "spring",
     desc: "田畑を潤す春雨が降る頃。穀物の成長を促す恵みの雨が降り、農作業が本格化します。「穀雨を過ぎると霜降りなし」という言葉も。",
     nature: "新緑がいっそう輝き、藤の花が紫の房を垂らします。雨粒が若葉に宿り、大地は豊かな実りの準備を始めます。" },
-  { id: 8, name: "立夏", romaji: "Rikka", en: "Start of Summer", month: 5, day: 6, season: "summer",
+  { id: 8, name: "立夏", romaji: "Rikka", en: "Start of Summer", month: 5, day: 5, hour: 20, minute: 49, season: "summer",
     desc: "暦の上での夏の始まり。野山は新緑に覆われ、風薫る爽やかな季節です。この日から立秋の前日までが夏とされます。",
     nature: "青葉が茂り、カッコウの声が山から届きます。川の水が透き通り、子供たちが元気よく野を駆け回ります。" },
-  { id: 9, name: "小満", romaji: "Shōman", en: "Grain Buds", month: 5, day: 21, season: "summer",
+  { id: 9, name: "小満", romaji: "Shōman", en: "Grain Buds", month: 5, day: 21, hour: 9, minute: 37, season: "summer",
     desc: "万物が次第に成長し、天地に満ち始める頃。「小満」の名は、農作物がある程度成長したことへの小さな満足感を表すとも言われます。",
     nature: "麦が実り始め、紅花が咲き、蚕は桑を食み始めます。田植えの準備が整い、農村は活気に満ちます。" },
-  { id: 10, name: "芒種", romaji: "Bōshu", en: "Grain in Ear", month: 6, day: 6, season: "summer",
+  { id: 10, name: "芒種", romaji: "Bōshu", en: "Grain in Ear", month: 6, day: 6, hour: 0, minute: 48, season: "summer",
     desc: "稲や麦などイネ科の植物の種まきの時期。「芒（のぎ）」とは稲・麦などの穂先にある針状の突起のことです。梅雨が始まる頃でもあります。",
     nature: "ホタルが光り始め、梅が黄色く熟します。雨に濡れた紫陽花が色鮮やかに咲き、カエルの合唱が響き渡ります。" },
-  { id: 11, name: "夏至", romaji: "Geshi", en: "Summer Solstice", month: 6, day: 21, season: "summer",
+  { id: 11, name: "夏至", romaji: "Geshi", en: "Summer Solstice", month: 6, day: 21, hour: 17, minute: 25, season: "summer",
     desc: "一年で最も昼が長く、夜が短い日。この日を境に日照時間は少しずつ短くなっていきます。沖縄では梅雨明けの時期でもあります。",
     nature: "太陽が最も高く輝き、向日葵が空を見上げます。夜は短く、蛍の光が闇の中に浮かび上がります。" },
-  { id: 12, name: "小暑", romaji: "Shōsho", en: "Minor Heat", month: 7, day: 7, season: "summer",
+  { id: 12, name: "小暑", romaji: "Shōsho", en: "Minor Heat", month: 7, day: 7, hour: 10, minute: 57, season: "summer",
     desc: "梅雨明けが近づき、本格的な暑さが始まる頃。七夕の節句もこの時期にあたります。「暑中見舞い」を送る習慣はこの頃から始まります。",
     nature: "蝉が鳴き始め、向日葵が高く伸びます。入道雲が青空に聳え、子供たちは海や川へと駆け出します。" },
-  { id: 13, name: "大暑", romaji: "Taisho", en: "Major Heat", month: 7, day: 23, season: "summer",
+  { id: 13, name: "大暑", romaji: "Taisho", en: "Major Heat", month: 7, day: 23, hour: 4, minute: 13, season: "summer",
     desc: "一年で最も暑さが厳しい時期。土用の丑の日もこの頃にあたり、ウナギを食べる風習があります。夕立や打ち水で涼を取る季節です。",
     nature: "蝉時雨が降り注ぎ、夕暮れに風鈴の音が涼を呼びます。夕立の後の虹と、土の匂いが夏の盛りを告げます。" },
-  { id: 14, name: "立秋", romaji: "Risshū", en: "Start of Autumn", month: 8, day: 7, season: "autumn",
+  { id: 14, name: "立秋", romaji: "Risshū", en: "Start of Autumn", month: 8, day: 7, hour: 20, minute: 43, season: "autumn",
     desc: "暦の上での秋の始まり。残暑見舞いはこの日以降に送ります。夕方の風に秋の気配が感じられるようになります。",
     nature: "夕空に秋の雲が広がり、コオロギの声が聞こえ始めます。朝晩の風がわずかに涼しくなり、変化の季節が訪れます。" },
-  { id: 15, name: "処暑", romaji: "Shosho", en: "End of Heat", month: 8, day: 23, season: "autumn",
+  { id: 15, name: "処暑", romaji: "Shosho", en: "End of Heat", month: 8, day: 23, hour: 11, minute: 19, season: "autumn",
     desc: "厳しい暑さが和らぎ始める頃。「処」は「止まる」という意味で、暑さが落ち着くことを表します。台風シーズンの始まりでもあります。",
     nature: "朝露が草葉に宿り、稲穂が金色に実り始めます。秋風が吹き渡り、空の青さが一段と深まります。" },
-  { id: 16, name: "白露", romaji: "Hakuro", en: "White Dew", month: 9, day: 8, season: "autumn",
+  { id: 16, name: "白露", romaji: "Hakuro", en: "White Dew", month: 9, day: 7, hour: 23, minute: 41, season: "autumn",
     desc: "草の葉に白い露が宿る頃。日中は残暑が残りますが、朝晩は涼しくなり、秋の深まりを感じます。",
     nature: "萩の花が揺れ、露がダイヤモンドのように光ります。渡り鳥の群れが南を目指し始め、空が高く澄み渡ります。" },
-  { id: 17, name: "秋分", romaji: "Shūbun", en: "Autumnal Equinox", month: 9, day: 23, season: "autumn",
+  { id: 17, name: "秋分", romaji: "Shūbun", en: "Autumnal Equinox", month: 9, day: 23, hour: 9, minute: 5, season: "autumn",
     desc: "昼と夜の長さが同じになる日。春分と同様に「彼岸」の中日で、秋のお彼岸のお墓参りが行われます。この日を境に夜が長くなります。",
     nature: "彼岸花が燃えるように咲き、稲刈りが始まります。月が大きく美しく、虫の声が夜長に響き渡ります。" },
-  { id: 18, name: "寒露", romaji: "Kanro", en: "Cold Dew", month: 10, day: 8, season: "autumn",
+  { id: 18, name: "寒露", romaji: "Kanro", en: "Cold Dew", month: 10, day: 8, hour: 15, minute: 29, season: "autumn",
     desc: "野の露が寒さで凍りそうになる頃。農作物の収穫が盛んになり、秋の深まりを実感する季節です。",
     nature: "菊が香り、モミジが色づき始めます。渡り鳥が空を渡り、実りの秋が最盛期を迎えます。" },
-  { id: 19, name: "霜降", romaji: "Sōkō", en: "Frost's Descent", month: 10, day: 23, season: "autumn",
+  { id: 19, name: "霜降", romaji: "Sōkō", en: "Frost's Descent", month: 10, day: 23, hour: 18, minute: 38, season: "autumn",
     desc: "霜が降り始める頃。山では紅葉が最盛期を迎え、朝には霜が白く輝きます。冬の訪れを告げる節気です。",
     nature: "山が紅と金に染まり、柿が枝もたわわに実ります。朝霜が庭を白く覆い、冬の予感が近づいてきます。" },
-  { id: 20, name: "立冬", romaji: "Rittō", en: "Start of Winter", month: 11, day: 7, season: "winter",
+  { id: 20, name: "立冬", romaji: "Rittō", en: "Start of Winter", month: 11, day: 7, hour: 18, minute: 52, season: "winter",
     desc: "暦の上での冬の始まり。木枯らしが吹き始め、冬の気配が濃くなります。この日から立春の前日までが冬とされます。",
     nature: "銀杏が黄金色に輝き、木枯らし一号が吹きます。山々に初雪が降り、冬支度の時節が来ました。" },
-  { id: 21, name: "小雪", romaji: "Shōsetsu", en: "Minor Snow", month: 11, day: 22, season: "winter",
+  { id: 21, name: "小雪", romaji: "Shōsetsu", en: "Minor Snow", month: 11, day: 22, hour: 16, minute: 23, season: "winter",
     desc: "山では雪が降り始める頃。「小雪」の名の通り、まだ積もるほどの雪ではありませんが、北国では本格的な雪の季節が始まります。",
     nature: "紅葉が散り、山に初雪がかかります。みかんが黄色く実り、鍋料理の恋しい季節になります。" },
-  { id: 22, name: "大雪", romaji: "Taisetsu", en: "Major Snow", month: 12, day: 7, season: "winter",
+  { id: 22, name: "大雪", romaji: "Taisetsu", en: "Major Snow", month: 12, day: 7, hour: 11, minute: 53, season: "winter",
     desc: "雪が本格的に降り積もる頃。山は深い雪に覆われ、熊が冬眠に入ります。この頃から正月の準備が始まります。",
     nature: "鶴が舞い降り、熊が眠りにつきます。炉辺の温かさがより恋しくなり、新年への準備が始まります。" },
-  { id: 23, name: "冬至", romaji: "Tōji", en: "Winter Solstice", month: 12, day: 22, season: "winter",
+  { id: 23, name: "冬至", romaji: "Tōji", en: "Winter Solstice", month: 12, day: 22, hour: 5, minute: 50, season: "winter",
     desc: "一年で最も夜が長く、昼が短い日。ゆず湯に入り、かぼちゃを食べる風習があります。この日を境に、少しずつ日が長くなります。",
     nature: "柚子が金色に実り、静かな長い夜が訪れます。すべては底を打ち、ここから光は再び満ちていきます。" },
 ];
@@ -1497,44 +1497,46 @@ function getSekkiDate(year, sekkiId) {
   return new Date(year, s.month - 1, s.day);
 }
 
+function getSekkiTime(year, s) {
+  // 節気の正確な開始日時（JST）を返す
+  return new Date(year, s.month - 1, s.day, s.hour || 0, s.minute || 0, 0);
+}
+
 function getCurrentSekki(date) {
   const year = date.getFullYear();
-  
-  // Find which sekki we're in
-  for (let i = 0; i < SEKKI.length; i++) {
-    const s = SEKKI[i];
-    const next = SEKKI[(i + 1) % SEKKI.length];
-    
-    let startDate = new Date(year, s.month - 1, s.day);
-    let endDate;
-    
-    if (i === SEKKI.length - 1) {
-      endDate = new Date(year + 1, next.month - 1, next.day);
-    } else {
-      endDate = new Date(year, next.month - 1, next.day);
-    }
-    
-    // Handle year wrap for winter sekki
-    if (i >= 20) { // 立冬以降
-      if (date >= startDate) {
-        return { sekkiId: i, startDate, endDate };
+  const nowMs = date.getTime();
+
+  // 当年・前年・翌年の節気時刻を生成して判定
+  for (let yi = -1; yi <= 1; yi++) {
+    const y = year + yi;
+    for (let i = 0; i < SEKKI.length; i++) {
+      const ni = (i + 1) % SEKKI.length;
+      const ny = ni === 0 ? y + 1 : y;
+
+      const startMs = getSekkiTime(y, SEKKI[i]).getTime();
+      const endMs   = getSekkiTime(ny, SEKKI[ni]).getTime();
+
+      if (nowMs >= startMs && nowMs < endMs) {
+        return {
+          sekkiId: i,
+          startDate: new Date(startMs),
+          endDate:   new Date(endMs),
+        };
       }
     }
-    
-    if (date >= startDate && date < endDate) {
-      return { sekkiId: i, startDate, endDate };
-    }
   }
-  
-  // If before first sekki of year, use last sekki of previous year
-  const lastStart = new Date(year - 1, SEKKI[23].month - 1, SEKKI[23].day);
-  const lastEnd = new Date(year, SEKKI[0].month - 1, SEKKI[0].day);
+
+  // フォールバック：冬至
+  const lastStart = getSekkiTime(year - 1, SEKKI[23]);
+  const lastEnd   = getSekkiTime(year, SEKKI[0]);
   return { sekkiId: 23, startDate: lastStart, endDate: lastEnd };
 }
 
-function getCurrentKou(date, sekkiId, startDate) {
-  const dayInSekki = Math.floor((date - startDate) / (1000 * 60 * 60 * 24));
-  const kouIndex = Math.min(Math.floor(dayInSekki / 5), 2);
+function getCurrentKou(date, sekkiId, startDate, endDate) {
+  // 節気の期間を3等分して候を決定（時刻基準）
+  const totalMs = endDate - startDate;
+  const elapsedMs = date - startDate;
+  const kouIndex = Math.min(Math.floor(elapsedMs / (totalMs / 3)), 2);
   return { kouIndex, kou: KOU[sekkiId][kouIndex] };
 }
 
@@ -1820,7 +1822,7 @@ function toJDutc(date) {
 
 // Jean Meeus "Astronomical Algorithms" の新月epoch (UTC)
 function moonAgeM(jd) {
-  const epoch = 2451550.259722;
+  const epoch = 2451550.958623; // 国立天文台データで補正済みのJD
   const synodic = 29.530588853;
   return ((jd - epoch) % synodic + synodic) % synodic;
 }
@@ -2627,7 +2629,7 @@ function renderToday() {
   document.getElementById('sekki-progress-label').textContent = 
     `節気の ${pct}% が経過しました`;
 
-  const { kouIndex, kou } = getCurrentKou(now, sekkiId, startDate);
+  const { kouIndex, kou } = getCurrentKou(now, sekkiId, startDate, endDate);
   document.getElementById('today-kou-name').textContent = kou.name;
   document.getElementById('today-kou-romaji').textContent = kou.romaji;
   document.getElementById('today-kou-desc').textContent = kou.desc;
