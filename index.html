@@ -1978,7 +1978,56 @@ function _kBase(date) {
 }
 
 // 指定日時より後の次の新月JD（Meeus精密計算）
+
+// 国立天文台 2026年 朔望データ（JST）
+// 出典: 国立天文台暦計算室
+const MOON_EVENTS_2026 = [
+  { type: 'new',  date: new Date('2026-01-19T04:52:00+09:00') },
+  { type: 'new',  date: new Date('2026-02-17T21:01:00+09:00') },
+  { type: 'new',  date: new Date('2026-03-19T10:23:00+09:00') },
+  { type: 'new',  date: new Date('2026-04-17T20:52:00+09:00') },
+  { type: 'new',  date: new Date('2026-05-17T05:01:00+09:00') },
+  { type: 'new',  date: new Date('2026-06-15T11:54:00+09:00') },
+  { type: 'new',  date: new Date('2026-07-14T18:44:00+09:00') },
+  { type: 'new',  date: new Date('2026-08-13T02:37:00+09:00') },
+  { type: 'new',  date: new Date('2026-09-11T12:27:00+09:00') },
+  { type: 'new',  date: new Date('2026-10-11T00:50:00+09:00') },
+  { type: 'new',  date: new Date('2026-11-09T16:02:00+09:00') },
+  { type: 'new',  date: new Date('2026-12-09T09:52:00+09:00') },
+  { type: 'full', date: new Date('2026-01-03T19:03:00+09:00') },
+  { type: 'full', date: new Date('2026-02-02T07:09:00+09:00') },
+  { type: 'full', date: new Date('2026-03-03T20:38:00+09:00') },
+  { type: 'full', date: new Date('2026-04-02T11:12:00+09:00') },
+  { type: 'full', date: new Date('2026-05-02T02:23:00+09:00') },
+  { type: 'full', date: new Date('2026-05-31T17:45:00+09:00') },
+  { type: 'full', date: new Date('2026-06-30T08:57:00+09:00') },
+  { type: 'full', date: new Date('2026-07-29T23:36:00+09:00') },
+  { type: 'full', date: new Date('2026-08-28T13:19:00+09:00') },
+  { type: 'full', date: new Date('2026-09-27T01:49:00+09:00') },
+  { type: 'full', date: new Date('2026-10-26T13:12:00+09:00') },
+  { type: 'full', date: new Date('2026-11-24T23:54:00+09:00') },
+  { type: 'full', date: new Date('2026-12-24T10:28:00+09:00') },
+];
+
 function nextNewMoonJD(afterJD) {
+  const afterMs = (afterJD - 2440587.5) * 86400000;
+  const found = MOON_EVENTS_2026
+    .filter(e => e.type === 'new' && e.date.getTime() > afterMs)
+    .sort((a, b) => a.date - b.date)[0];
+  if (found) return found.date.getTime() / 86400000 + 2440587.5;
+  return _meeusNextNew(afterJD);
+}
+
+function nextFullMoonJD(afterJD) {
+  const afterMs = (afterJD - 2440587.5) * 86400000;
+  const found = MOON_EVENTS_2026
+    .filter(e => e.type === 'full' && e.date.getTime() > afterMs)
+    .sort((a, b) => a.date - b.date)[0];
+  if (found) return found.date.getTime() / 86400000 + 2440587.5;
+  return _meeusNextFull(afterJD);
+}
+
+function _meeusNextNew(afterJD) {
   const afterDate = new Date((afterJD - 2440587.5) * 86400000);
   let k = _kBase(afterDate) - 1;
   for (let i = 0; i < 4; i++) {
@@ -1989,29 +2038,35 @@ function nextNewMoonJD(afterJD) {
   return _meeusNewMoon(k);
 }
 
-// 指定日時より後の次の満月JD（Meeus精密計算）
-function nextFullMoonJD(afterJD) {
+function _meeusNextFull(afterJD) {
   const afterDate = new Date((afterJD - 2440587.5) * 86400000);
   let k = _kBase(afterDate) - 1;
   for (let i = 0; i < 4; i++) {
-    const jd = _meeusNewMoon(k + 0.5); // k+0.5が満月
+    const jd = _meeusNewMoon(k + 0.5);
     if (jd > afterJD) return jd;
     k++;
   }
   return _meeusNewMoon(k + 0.5);
 }
 
-function jdToJST(jd) {
-  return new Date((jd - 2440587.5) * 86400000 + 9 * 3600000);
-}
 
-function fmtMoonTime(jd) {
-  const d = jdToJST(jd);
-  const mo = d.getMonth() + 1;
-  const da = d.getDate();
-  const hh = String(d.getHours()).padStart(2, '0');
-  const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${mo}/${da} ${hh}:${mm}`;
+
+function fmtMoonTime(jdOrDate) {
+  // DateオブジェクトまたはJDを受け取ってJST時刻文字列を返す
+  let d;
+  if (jdOrDate instanceof Date) {
+    d = jdOrDate;
+  } else {
+    const utcMs = (jdOrDate - 2440587.5) * 86400000;
+    d = new Date(utcMs);
+  }
+  // UTC基準でJST(+9h)を計算
+  const jstH = (d.getUTCHours() + 9) % 24;
+  const jstM = d.getUTCMinutes();
+  const jstDay = new Date(d.getTime() + 9 * 3600000);
+  const mo = jstDay.getUTCMonth() + 1;
+  const da = jstDay.getUTCDate();
+  return `${mo}/${da} ${String(jstH).padStart(2,'0')}:${String(jstM).padStart(2,'0')}`;
 }
 
 function renderKyureki() {
@@ -2043,13 +2098,15 @@ function renderKyureki() {
   if (age < 1.5 || age >= 28.0) {
     // 新月当日 → 新月時刻を表示
     const nmJD = nextNewMoonJD(jd - 2); // 直近の朔を探す
-    const nmTime = fmtMoonTime(nmJD);
+    const nmDate = MOON_EVENTS_2026.find(e => e.type==='new' && Math.abs(e.date.getTime()/86400000+2440587.5 - nmJD) < 0.1);
+    const nmTime = nmDate ? fmtMoonTime(nmDate.date) : fmtMoonTime(nmJD);
     timeEl.textContent = `🌑 新月 ${nmTime}`;
     timeEl.style.display = 'block';
   } else if (age >= 13.5 && age < 16.1) {
     // 満月当日 → 満月時刻を表示
     const fmJD = nextFullMoonJD(jd - 2);
-    const fmTime = fmtMoonTime(fmJD);
+    const fmDate = MOON_EVENTS_2026.find(e => e.type==='full' && Math.abs(e.date.getTime()/86400000+2440587.5 - fmJD) < 0.1);
+    const fmTime = fmDate ? fmtMoonTime(fmDate.date) : fmtMoonTime(fmJD);
     timeEl.textContent = `🌕 満月 ${fmTime}`;
     timeEl.style.display = 'block';
   } else {
@@ -2061,9 +2118,11 @@ function renderKyureki() {
 
     // 近い方を優先
     if (daysToNM <= daysToFM) {
-      nextEl.textContent = `次の新月 ${fmtMoonTime(nextNM)}`;
+      const nextNMDate = MOON_EVENTS_2026.find(e => e.type==='new' && Math.abs(e.date.getTime()/86400000+2440587.5 - nextNM) < 0.1);
+      nextEl.textContent = `次の新月 ${nextNMDate ? fmtMoonTime(nextNMDate.date) : fmtMoonTime(nextNM)}`;
     } else {
-      nextEl.textContent = `次の満月 ${fmtMoonTime(nextFM)}`;
+      const nextFMDate = MOON_EVENTS_2026.find(e => e.type==='full' && Math.abs(e.date.getTime()/86400000+2440587.5 - nextFM) < 0.1);
+      nextEl.textContent = `次の満月 ${nextFMDate ? fmtMoonTime(nextFMDate.date) : fmtMoonTime(nextFM)}`;
     }
     nextEl.style.display = 'block';
   }
